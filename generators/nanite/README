@@ -1,0 +1,7 @@
+== Getting Started
+
+1. Configure RAILS_ROOT/config/nanite_mapper.yml and RAILS_ROOT/config/
+2. run "rake nanite:rabbitmq" as root
+3. run "script/nanite start"
+4. on a rails console run: Nanite.request("/jobs/test", [1,2,3]){|r| puts r.inspect}
+

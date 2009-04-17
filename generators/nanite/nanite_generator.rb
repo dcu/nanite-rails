@@ -6,7 +6,8 @@ class NaniteGenerator < Rails::Generator::Base
                               Config::CONFIG['ruby_install_name'])
 
   def initialize(runtime_args, runtime_options = {})
-    FileUtils.mkpath('lib/tasks')
+    puts File.read(File.dirname(__FILE__)+"/README")
+    sleep 5
     super
   end
 

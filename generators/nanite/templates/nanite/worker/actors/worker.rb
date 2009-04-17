@@ -1,6 +1,6 @@
 class Worker
   include Nanite::Actor
-  expose :perform, :run
+  expose :perform, :run, :test
 
   def perform(job_id)
     job = ::NaniteJob.find_by_id(job_id)
@@ -44,6 +44,10 @@ class Worker
 
     $stderr.puts ret.inspect
     ret
+  end
+
+  def test(*args)
+    "You're testing nanite-rails. ARGS = #{args.join(", ")}"
   end
 end
 
