@@ -6,11 +6,19 @@ unless ENV["NO_NM"]
     opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
     opts.merge!(:offline_failsafe => true)
 
+    is_thin = false
     if defined?(Thin)
-      until EM.reactor_running?
+      10.times do
+        if EM.reactor_running?
+          is_thin = true
+          break
+        end
         sleep 0.5
       end
-      $stderr.puts "Starting Nanite mapper..."
+    end
+
+    if is_thin
+      $stderr.puts "Starting Nanite mapper on Thin..."
       Nanite.start_mapper(opts)
     else
       EM.run do
