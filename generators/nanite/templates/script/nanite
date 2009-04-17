@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'fileutils'
+
+APP_ROOT = File.expand_path(File.dirname(__FILE__)+"/../")
+
+options = {
+  :piddir => File.join(APP_ROOT, "tmp", "pids"),
+  :nanitedir => APP_ROOT + "/nanite",
+  :agent => "worker"
+}
+
+optparser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} <start|stop|restart> [options]"
+
+  opts.on("-a", "--agent=AGENT", "Agent name (default=worker)") do |o|
+    options[:agent] = o
+  end
+
+  opts.on("-P", "--piddir=PATH", "PID dir to use (if daemonized)", "Default: #{options[:piddir]}") do |o|
+    options[:piddir] = o
+  end
+
+  opts.on("-d", "--daemonize", "Run agent as a daemon") do |o|
+    options[:daemonize] = true
+  end
+
+  opts.on("-c", "--cluster=NUM_NODES", Integer, "Number of daemons to run.") do |o|
+    options[:cluster] = o.to_i
+    options[:daemonize] = true
+  end
+
+  opts.on_tail("-h", "--help", "Show this help message.") do
+    puts opts
+    exit
+  end
+end
+
+args = []
+begin
+  args = optparser.parse!
+rescue => e
+  $stderr.puts e
+  $stderr.puts optparser
+  exit 0
+end
+
+if args.empty?
+  $stdout.puts optparser
+  exit 1
+end
+
+class NaniteCtl
+  def initialize(options)
+    @options = options
+    @identifier = options[:agent] || "worker"
+    @cmd = "nanite-agent"
+
+    config_file = APP_ROOT+"/config/nanite_#{@identifier}.yml"
+    @nanite_opts = YAML.load_file(config_file)[ENV["RAILS_ENV"] || "development"]
+  end
+
+  def start
+    FileUtils.mkpath(@options[:piddir])
+    nanite_root = File.join(@options[:nanitedir], @identifier)
+    nanite_opts = "-n '#{nanite_root}' --pid-dir '#{@options[:piddir]}'"
+    nanite_opts << @nanite_opts.map {|k,v| "--#{k} '#{v}'" }.join(" ")
+    if @options[:daemonize]
+      nanite_opts << " -d"
+    end
+
+    (@options[:cluster] || 1).times do |i|
+      system("#{@cmd} #{nanite_opts} -t #{@identifier}#{i}-#{Time.now.to_i}")
+    end
+  end
+
+  def stop
+    Dir.glob(@options[:piddir]+"/nanite.nanite-#{@identifier}*-*.pid") do |pidfile|
+      begin
+        pid = File.read(pidfile).to_i
+        Process.kill("TERM", pid)
+        Process.kill(0, pid)
+        Process.wait
+      rescue Errno::ECHILD, Errno::ESRCH => e
+        $stdout.puts "Process #{pid} has stopped"
+      ensure
+        File.unlink(pidfile) if File.exist?(pidfile)
+      end
+    end
+  end
+
+  def restart
+    begin
+      stop
+    rescue => e
+      $stderr.puts "Warning: #{e}"
+    end
+    start
+  end
+end
+
+ctl = NaniteCtl.new(options)
+ctl.send(args.shift)

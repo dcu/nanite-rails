@@ -1,0 +1,20 @@
+development:
+  :host: localhost
+  :user: nanite
+  :pass: testing
+  :vhost: /nanite
+  :log_level: debug
+
+production:
+  :host: localhost
+  :user: nanite
+  :pass: testing
+  :vhost: /nanite
+  :log_level: info
+
+test:
+  :host: localhost
+  :user: nanite
+  :pass: testing
+  :vhost: /nanite
+  :log_level: debug

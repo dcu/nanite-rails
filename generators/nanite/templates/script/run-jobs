@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+require 'tmpdir'
+require 'fileutils'
+
+APP_ROOT = File.expand_path(File.dirname(__FILE__)+"/../")
+LOCK_FILE = Dir.tmpdir+"/nanite.worker.lock"
+
+if File.exist?(LOCK_FILE)
+  $stderr.puts "lockfile '#{LOCK_FILE}' found! Exiting..."
+  exit(1)
+end
+
+ENV["RAILS_ENV"] ||= "development"
+require APP_ROOT + "/config/environment"
+
+NaniteJob.logger = Logger.new(Rails.root+"/log/jobs.log")
+
+FileUtils.touch(LOCK_FILE)
+begin
+  NaniteJob.perform_pending_jobs!
+ensure
+  FileUtils.rm_f(LOCK_FILE)
+end

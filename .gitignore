@@ -1,0 +1,6 @@
+.DS_Store
+.emacs-project
+*~
+pkg
+doc
+*.swp
