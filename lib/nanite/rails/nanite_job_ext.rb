@@ -1,5 +1,5 @@
 module NaniteJobExt
-  def push_url(url, payload)
+  def push_url(url, payload = nil)
     begin
       Nanite.push(url, payload, self.options)
     rescue Errno::ENOENT
@@ -7,7 +7,7 @@ module NaniteJobExt
     end
   end
 
-  def request_url(url, payload, &block)
+  def request_url(url, payload = nil, &block)
     begin
       Nanite.request(url, payload, self.options, &block)
     rescue Errno::ENOENT

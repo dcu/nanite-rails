@@ -1,0 +1,3 @@
+---
+:identity: <%= agent_options[:agent_name] %>
+:log_level: debug
