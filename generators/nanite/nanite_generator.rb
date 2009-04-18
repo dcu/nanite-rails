@@ -8,6 +8,7 @@ class NaniteGenerator < Rails::Generator::Base
   def initialize(runtime_args, runtime_options = {})
     puts File.read(File.dirname(__FILE__)+"/README")
     sleep 5
+    $stdout.flush
     super
   end
 
@@ -21,15 +22,11 @@ class NaniteGenerator < Rails::Generator::Base
 
       # Scripts
       m.file      'script/nanite', 'script/nanite', script_options
-      m.file      'script/run-jobs', 'script/run-jobs', script_options
 
       # Config
       m.directory 'config'
       m.file      'config/nanite_mapper.yml', 'config/nanite_mapper.sample.yml'
-      m.file      'config/nanite_mapper.yml', 'config/nanite_mapper.yml'
-
       m.file      'config/nanite_worker.yml', 'config/nanite_worker.sample.yml'
-      m.file      'config/nanite_worker.yml', 'config/nanite_worker.yml'
 
       # Nanite
       m.directory 'nanite/worker'
@@ -42,15 +39,6 @@ class NaniteGenerator < Rails::Generator::Base
       # Initializer
       m.directory 'config/initializers'
       m.file      'config/initializers/nanite.rb', 'config/initializers/nanite.rb'
-
-      # Model
-      m.directory 'app/models'
-      m.file      'app/models/nanite_job.rb', 'app/models/nanite_job.rb'
-
-      # Migration
-      m.migration_template 'db/migrate/create_nanite_jobs.rb', 'db/migrate', :assigns => {
-          :migration_name => "CreateNaniteJobs"
-      }, :migration_file_name => "create_nanite_jobs"
     end
   end
 

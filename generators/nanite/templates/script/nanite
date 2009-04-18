@@ -64,8 +64,9 @@ class NaniteCtl
   def start
     FileUtils.mkpath(@options[:piddir])
     nanite_root = File.join(@options[:nanitedir], @identifier)
-    nanite_opts = "-n '#{nanite_root}' --pid-dir '#{@options[:piddir]}'"
-    nanite_opts << @nanite_opts.map {|k,v| "--#{k} '#{v}'" }.join(" ")
+    nanite_opts = " -n '#{nanite_root}' --pid-dir '#{@options[:piddir]}' "
+    nanite_opts << " --log-dir #{APP_ROOT}/log "
+    nanite_opts << @nanite_opts.map {|k,v| "--#{k.to_s.gsub("_", "-")} '#{v}'" }.join(" ")
     if @options[:daemonize]
       nanite_opts << " -d"
     end
