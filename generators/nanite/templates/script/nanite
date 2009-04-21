@@ -55,7 +55,12 @@ class NaniteCtl
   def initialize(options)
     @options = options
     @identifier = options[:agent] || "worker"
-    @cmd = "nanite-agent"
+
+    cmds = Dir.glob(File.dirname(__FILE__)+"/vendor/gems/nanite*/bin/nanite-agent")
+    @cmd = cmds.find {|e| File.exist?(e) }
+    if @cmd.nil?
+      @cmd = "nanite-agent"
+    end
 
     config_file = APP_ROOT+"/config/nanite_#{@identifier}.yml"
     @nanite_opts = YAML.load_file(config_file)[ENV["RAILS_ENV"] || "development"]
