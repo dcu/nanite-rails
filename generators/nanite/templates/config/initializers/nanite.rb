@@ -1,31 +1,65 @@
 require 'nanite'
 require 'nanite/rails'
 
-unless ENV["NO_NM"]
+def start_mapper_on_passenger
+  logger = RAILS_DEFAULT_LOGGER
+
+  opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
+  opts.merge!(:offline_failsafe => true)
+
+  th = Thread.current
   Thread.new do
-    opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
-    opts.merge!(:offline_failsafe => true)
-
-    is_thin = false
-    if defined?(Thin)
-      10.times do
-        if EM.reactor_running?
-          is_thin = true
-          break
-        end
-        sleep 0.5
-      end
-    end
-
-    if is_thin
-      $stderr.puts "Starting Nanite mapper on Thin..."
-      Nanite.start_mapper(opts)
-    else
-      EM.run do
-        $stderr.puts "Starting Nanite mapper..."
+    logger.info "Starting Nanite mapper on Passenger..."
+    EM.run do
+      begin
         Nanite.start_mapper(opts)
+      rescue => e
+        logger.error e.to_s
+        logger.error e.backtrace.join("\n  ")
+      ensure
+        th.wakeup
       end
     end
-    # TODO: add support for passenger :)
+  end
+  Thread.stop
+end
+
+unless ENV["NO_NM"]
+  if defined?(PhusionPassenger)
+    PhusionPassenger.on_event(:starting_worker_process) do |forked|
+      if forked
+        start_mapper_on_passenger
+      else
+        if !EM.reactor_running?
+          start_mapper_on_passenger
+        end
+      end
+    end
+  else
+    Thread.new do
+      opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
+      opts.merge!(:offline_failsafe => true)
+
+      is_thin = false
+      if defined?(Thin)
+        10.times do
+          if EM.reactor_running?
+            is_thin = true
+            break
+          end
+          sleep 0.5
+        end
+      end
+
+      if is_thin
+        $stderr.puts "Starting Nanite mapper on Thin..."
+        Nanite.start_mapper(opts)
+      else
+        EM.run do
+          $stderr.puts "Starting Nanite mapper..."
+          Nanite.start_mapper(opts)
+        end
+      end
+    end
   end
 end
