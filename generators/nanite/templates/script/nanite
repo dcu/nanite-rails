@@ -77,7 +77,7 @@ class NaniteCtl
     end
 
     (@options[:cluster] || 1).times do |i|
-      system("#{@cmd} #{nanite_opts} -t #{@identifier}#{i}-#{Time.now.to_i}")
+      system("#{@cmd} #{nanite_opts} -t #{@identifier}#{i}")
     end
   end
 
