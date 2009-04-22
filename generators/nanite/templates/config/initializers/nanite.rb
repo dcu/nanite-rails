@@ -1,4 +1,3 @@
-require 'nanite'
 require 'nanite/rails'
 
 def start_mapper_on_passenger
@@ -24,7 +23,7 @@ def start_mapper_on_passenger
   Thread.stop
 end
 
-unless ENV["NO_NM"]
+if ENV["NO_NM"].nil? || RAILS_ENV != "test"
   if defined?(PhusionPassenger)
     PhusionPassenger.on_event(:starting_worker_process) do |forked|
       if forked
