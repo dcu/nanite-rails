@@ -24,9 +24,3 @@
   $ Nanite.request("/spiders/ping", 2){|r| puts r.inspect}
   $ Nanite.request("/spiders/action1"){|r| puts r.inspect}
 
-# Nanite
-$ script/generate nanite
-
-$ sudo rake nanite:rabbitmq
-$ script/nanite start
-
