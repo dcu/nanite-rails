@@ -6,6 +6,10 @@ module NaniteAgent
 class <%= agent_options[:class_name] %>
   include Nanite::Actor
 
+  def ping(payload)
+    "PONG #{payload.inspect}"
+  end
+
   <%- if !agent_options[:actions].empty? -%>
   expose <%= agent_options[:actions].map{|a| ":#{a}"}.join(", ") %>
   <%- agent_options[:actions].each do |action| -%>
