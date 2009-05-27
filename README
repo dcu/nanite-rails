@@ -1,15 +1,32 @@
+== Getting Started
+
+- Install the plugin: script/plugin install git://github.com/dcu/nanite-rails.git
+
+- script/generate nanite
+
+- Configure RAILS_ROOT/config/nanite_mapper.yml and RAILS_ROOT/config/nanite_worker.yml
+    $ cp config/nanite_mapper.sample.yml config/nanite_mapper.yml
+    $ cp config/nanite_worker.sample.yml config/nanite_worker.yml
+
+- Add "config.gem 'nanite'" to RAILS_ROOT/config/environment.rb
+
+- run "rake nanite:rabbitmq" as root
+
+- run "script/nanite start"
+
+- on a rails console run: NaniteJob.request!(Hash, :constants){|r| puts r.inspect}
+
+== Adding a custom agent
+
+- script/generate agent spider action1 action2
+- script/nanite -a spider start
+- on a rails console run:
+  $ Nanite.request("/spiders/ping", 2){|r| puts r.inspect}
+  $ Nanite.request("/spiders/action1"){|r| puts r.inspect}
 
 # Nanite
 $ script/generate nanite
-$ cp config/nanite_mapper.sample.yml config/nanite_mapper.yml
-$ cp config/nanite_worker.sample.yml config/nanite_worker.yml
+
 $ sudo rake nanite:rabbitmq
 $ script/nanite start
-
-# Orbited (commet-like)
-$ install rabbitmq-stomp
-$ script/generate orbited
-$ edit config/orbited.yml and remove the morbid dependency
-$ script/generate orbited_conf
-$ orbited -c config/orbited.cfg
 

@@ -6,6 +6,7 @@ module NaniteAgent
 class <%= agent_options[:class_name] %>
   include Nanite::Actor
 
+  expose :ping
   def ping(payload)
     "PONG #{payload.inspect}"
   end
