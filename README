@@ -16,11 +16,12 @@
 
 - on a rails console run: NaniteJob.request!(Hash, :constants){|r| puts r.inspect}
 
-== Adding a custom agent
+== Adding a custom agent named "spider"
+  Spider will have two actions, eat, and throw_web, eat takes a parameter
 
-- script/generate agent spider action1 action2
-- script/nanite -a spider start
+- script/generate agent spider eat throw_web
+- script/nanite -a spider start          
 - on a rails console run:
-  $ Nanite.request("/spiders/ping", 2){|r| puts r.inspect}
-  $ Nanite.request("/spiders/action1"){|r| puts r.inspect}
+  $ Nanite.request("/spiders/eat", "fly"){|r| puts r.inspect}
+  $ Nanite.request("/spiders/throw_web"){|r| puts r.inspect}
 
