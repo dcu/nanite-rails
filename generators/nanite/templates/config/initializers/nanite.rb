@@ -23,7 +23,7 @@ def start_mapper_on_passenger
   Thread.stop
 end
 
-if ENV["NO_NM"].nil? || RAILS_ENV != "test"
+if ENV["NO_NM"].nil? && RAILS_ENV != "test"
   if defined?(PhusionPassenger)
     PhusionPassenger.on_event(:starting_worker_process) do |forked|
       if forked
