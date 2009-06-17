@@ -83,7 +83,7 @@ class NaniteCtl
   end
 
   def stop
-    Dir.glob(@options[:piddir]+"/nanite.nanite-#{@identifier}*-*.pid") do |pidfile|
+    Dir.glob(@options[:piddir]+"/nanite.nanite-#{@identifier}*.pid") do |pidfile|
       begin
         pid = File.read(pidfile).to_i
         Process.kill("TERM", pid)
