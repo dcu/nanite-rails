@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'fileutils'
+require 'erb'
 require 'yaml'
 
 APP_ROOT = File.expand_path(File.dirname(__FILE__)+"/../")
@@ -64,11 +65,9 @@ class NaniteCtl
     end
 
     config_file = APP_ROOT+"/config/nanite_#{@identifier}.yml"
-    @nanite_opts = YAML.load_file(config_file)[ENV["RAILS_ENV"] || "development"]
-  end
-
-  def start
-    FileUtils.mkpath(@options[:piddir])
+    @nanite_opts = YAML::load(ERB.new(IO.read(config_file)).result)[ENV["RAILS_ENV"] || "development"]
+  end    
+   FileUtils.mkpath(@options[:piddir])
     nanite_root = File.join(@options[:nanitedir], @identifier)
     nanite_opts = " -n '#{nanite_root}' --pid-dir '#{@options[:piddir]}' "
     nanite_opts << " --log-dir #{APP_ROOT}/log "

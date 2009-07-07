@@ -1,9 +1,13 @@
 require 'nanite/rails'
 
+def load_mapper_opts
+  YAML::load(ERB.new(IO.read(RAILS_ROOT+"/config/nanite_mapper.yml")).result)[ENV["RAILS_ENV"] || "development"]
+end
+
 def start_mapper_on_passenger
   logger = RAILS_DEFAULT_LOGGER
 
-  opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
+	opts = load_mapper_opts
   opts.merge!(:offline_failsafe => true)
 
   th = Thread.current
@@ -36,7 +40,7 @@ if ENV["NO_NM"].nil? && RAILS_ENV != "test"
     end
   else
     Thread.new do
-      opts = YAML.load_file(RAILS_ROOT+"/config/nanite_mapper.yml")[ENV["RAILS_ENV"] || "development"]
+      opts = load_mapper_opts
       opts.merge!(:offline_failsafe => true)
 
       is_thin = false
