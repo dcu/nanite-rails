@@ -4,9 +4,9 @@
 
 - script/generate nanite
 
-- Configure RAILS_ROOT/config/nanite_mapper.yml and RAILS_ROOT/config/nanite_worker.yml
-    $ cp config/nanite_mapper.sample.yml config/nanite_mapper.yml
-    $ cp config/nanite_worker.sample.yml config/nanite_worker.yml
+- Configure RAILS_ROOT/config/nanite/mapper.yml and RAILS_ROOT/config/nanite/worker.yml
+    $ cp config/nanite/mapper.sample.yml config/nanite/mapper.yml
+    $ cp config/nanite/worker.sample.yml config/nanite/worker.yml
 
 - Add "config.gem 'nanite'" to RAILS_ROOT/config/environment.rb
 

@@ -1,7 +1,7 @@
 require 'nanite/rails'
 
 def load_mapper_opts
-  YAML::load(ERB.new(IO.read(RAILS_ROOT+"/config/nanite_mapper.yml")).result)[ENV["RAILS_ENV"] || "development"]
+  YAML::load(ERB.new(IO.read(RAILS_ROOT+"/config/nanite/mapper.yml")).result)[ENV["RAILS_ENV"] || "development"]
 end
 
 def start_mapper_on_passenger

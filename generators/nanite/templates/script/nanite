@@ -64,7 +64,7 @@ class NaniteCtl
       @cmd = "nanite-agent"
     end
 
-    config_file = APP_ROOT+"/config/nanite_#{@identifier}.yml"
+    config_file = APP_ROOT+"/config/nanite/#{@identifier}.yml"
     @nanite_opts = YAML::load(ERB.new(IO.read(config_file)).result)[ENV["RAILS_ENV"] || "development"]
   end    
 
