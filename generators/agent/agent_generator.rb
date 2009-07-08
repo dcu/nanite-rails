@@ -27,8 +27,8 @@ class AgentGenerator < Rails::Generator::Base
   def manifest
     record do |m|
       # Config
-      m.directory 'config'
-      m.file      'config/nanite_agent.yml', "config/nanite_#{agent_options[:agent_name]}.yml"
+      m.directory 'config/nanite'
+      m.file      'config/nanite/agent.yml', "config/nanite/#{agent_options[:agent_name]}.yml"
 
       # Nanite
       m.directory "nanite/#{agent_options[:agent_name]}"

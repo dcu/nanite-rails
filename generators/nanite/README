@@ -1,6 +1,6 @@
 == Getting Started
 
-1. Configure RAILS_ROOT/config/nanite_mapper.yml and RAILS_ROOT/config/nanite_worker.yml
+1. Configure RAILS_ROOT/config/nanite/mapper.yml and RAILS_ROOT/config/nanite/worker.yml
 2. Add "config.gem 'nanite'" to RAILS_ROOT/config/environment.rb
 2. run "rake nanite:rabbitmq" as root
 3. run "script/nanite start"

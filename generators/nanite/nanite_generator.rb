@@ -24,9 +24,9 @@ class NaniteGenerator < Rails::Generator::Base
       m.file      'script/nanite', 'script/nanite', script_options
 
       # Config
-      m.directory 'config'
-      m.file      'config/nanite_mapper.yml', 'config/nanite_mapper.sample.yml'
-      m.file      'config/nanite_worker.yml', 'config/nanite_worker.sample.yml'
+      m.directory 'config/nanite'
+      m.file      'config/nanite/mapper.yml', 'config/nanite/mapper.sample.yml'
+      m.file      'config/nanite/worker.yml', 'config/nanite/worker.sample.yml'
 
       # Nanite
       m.directory 'nanite/worker'

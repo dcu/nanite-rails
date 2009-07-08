@@ -4,7 +4,7 @@ namespace :nanite do
   task :rabbitmq => :environment do
     vhost = nil
     users = {}
-    Dir.glob(RAILS_ROOT+"/config/nanite_*.yml") do |config_file|
+    Dir.glob(RAILS_ROOT+"/config/nanite/*.yml") do |config_file|
       opts = YAML.load_file(config_file)[ENV["RAILS_ENV"] || "development"]
 
       next if users.has_key?(opts[:user])
