@@ -62,7 +62,7 @@ class NaniteCtl
     @options = options
     @identifier = options[:agent] || "worker"
 
-    cmds = Dir.glob(File.dirname(__FILE__)+"/vendor/gems/nanite*/bin/nanite-agent")
+    cmds = Dir.glob(APP_ROOT + "/vendor/gems/nanite*/bin/nanite-agent")
     @cmd = cmds.find {|e| File.exist?(e) }
     if @cmd.nil?
       @cmd = "nanite-agent"
