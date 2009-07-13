@@ -33,6 +33,10 @@ optparser = OptionParser.new do |opts|
     options[:daemonize] = true
   end
 
+  opts.on("-e", "--environment=RAILS_ENV", "Rails environment to run in") do |e|
+    ENV['RAILS_ENV'] = e
+  end
+
   opts.on_tail("-h", "--help", "Show this help message.") do
     puts opts
     exit
