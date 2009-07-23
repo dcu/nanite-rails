@@ -4,6 +4,7 @@ require 'optparse'
 require 'fileutils'
 require 'erb'
 require 'yaml'
+require 'socket'
 
 APP_ROOT = File.expand_path(File.dirname(__FILE__)+"/../")
 
@@ -83,7 +84,7 @@ class NaniteCtl
     end
 
     (@options[:cluster] || 1).times do |i|
-      system("#{@cmd} #{nanite_opts} -t #{@identifier}#{i}")
+      system("#{@cmd} #{nanite_opts} -t #{@identifier}-#{Socket.gethostname.split('.')[0]}-#{i}")
     end
   end
 
