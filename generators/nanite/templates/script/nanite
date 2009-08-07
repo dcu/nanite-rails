@@ -89,7 +89,12 @@ class NaniteCtl
     if @options[:daemonize]
       nanite_opts << " -d"
     end
-
+    if @options[:single_threaded]
+      nanite_opts << " --single-threaded"
+    end
+    if @options[:threadpoool_size]
+      nanite_opts << " --threadpool_size #{options[:threadpool_size]}"
+    end
     (@options[:cluster] || 1).times do |i|
       system("#{@cmd} #{nanite_opts} -t #{@identifier}#{i}")
     end
