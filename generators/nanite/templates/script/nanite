@@ -40,6 +40,10 @@ optparser = OptionParser.new do |opts|
   opts.on("-s", "--single-threaded", "Run in single threaded mode") do |s|
     options[:single_threaded] = true
   end
+  
+  opts.on("--threadpool=COUNT", "Number of threads to run all operations in") do |tps|
+    options[:threadpool_size] = tps
+  end
 
   opts.on_tail("-h", "--help", "Show this help message.") do
     puts opts
