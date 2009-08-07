@@ -36,6 +36,10 @@ optparser = OptionParser.new do |opts|
   opts.on("-e", "--environment=RAILS_ENV", "Rails environment to run in") do |e|
     ENV['RAILS_ENV'] = e
   end
+  
+  opts.on("-s", "--single-threaded", "Run in single threaded mode") do |s|
+    options[:single_threaded] = true
+  end
 
   opts.on_tail("-h", "--help", "Show this help message.") do
     puts opts
