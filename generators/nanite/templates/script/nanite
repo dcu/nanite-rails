@@ -38,6 +38,14 @@ optparser = OptionParser.new do |opts|
   opts.on("-e", "--environment=RAILS_ENV", "Rails environment to run in") do |e|
     ENV['RAILS_ENV'] = e
   end
+  
+  opts.on("-s", "--single-threaded", "Run in single threaded mode") do |s|
+    options[:single_threaded] = true
+  end
+  
+  opts.on("--threadpool=COUNT", "Number of threads to run all operations in") do |tps|
+    options[:threadpool_size] = tps
+  end
 
   opts.on("-t", "--tag TAG", "Add a custom tag to agents. Can specify multiple times, or specified",
                              "in the config file as a YAML array named tags") do |tag|
@@ -92,7 +100,12 @@ class NaniteCtl
     if @options[:daemonize]
       nanite_opts << " -d"
     end
-
+    if @options[:single_threaded]
+      nanite_opts << " --single-threaded"
+    end
+    if @options[:threadpool_size]
+      nanite_opts << " --threadpool_size #{options[:threadpool_size]}"
+    end
     (@options[:cluster] || 1).times do |i|
       system("#{@cmd} #{nanite_opts} -t #{@identifier}-#{Socket.gethostname.split('.')[0]}-#{i}")
     end
