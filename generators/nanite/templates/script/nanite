@@ -92,7 +92,7 @@ class NaniteCtl
     if @options[:single_threaded]
       nanite_opts << " --single-threaded"
     end
-    if @options[:threadpoool_size]
+    if @options[:threadpool_size]
       nanite_opts << " --threadpool_size #{options[:threadpool_size]}"
     end
     (@options[:cluster] || 1).times do |i|
