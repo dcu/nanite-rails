@@ -38,11 +38,11 @@ optparser = OptionParser.new do |opts|
   opts.on("-e", "--environment=RAILS_ENV", "Rails environment to run in") do |e|
     ENV['RAILS_ENV'] = e
   end
-  
+
   opts.on("-s", "--single-threaded", "Run in single threaded mode") do |s|
     options[:single_threaded] = true
   end
-  
+
   opts.on("--threadpool=COUNT", "Number of threads to run all operations in") do |tps|
     options[:threadpool_size] = tps
   end
@@ -85,7 +85,7 @@ class NaniteCtl
 
     config_file = APP_ROOT+"/config/nanite/#{@identifier}.yml"
     @nanite_opts = YAML::load(ERB.new(IO.read(config_file)).result)[ENV["RAILS_ENV"] || "development"]
-  end    
+  end
 
   def start
     FileUtils.mkpath(@options[:piddir])
@@ -93,7 +93,7 @@ class NaniteCtl
     nanite_opts = " -n '#{nanite_root}' --pid-dir '#{@options[:piddir]}' "
     nanite_opts << " --log-dir #{APP_ROOT}/log "
 
-    tags = [@options.delete(:tags), @nanite_opts.delete(:tags)].flatten
+    tags = [@options.delete(:tags), @nanite_opts.delete(:tags)].flatten.compact
     nanite_opts << tags.map {|t| "--tag #{t} "}.join
 
     nanite_opts << @nanite_opts.map {|k,v| "--#{k.to_s.gsub("_", "-")} '#{v}'" }.join(" ")
